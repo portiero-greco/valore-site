@@ -2,322 +2,248 @@ import { useLanguage } from "../lib/LanguageContext";
 import { Star } from "lucide-react";
 import { useState } from "react";
 
-/* =====================================================
-   TYPES
-===================================================== */
-
-interface Review {
-  id: number;
-  name: string;
-  rating: number;
-  date: string;
-  text: string;
-  avatar: string;
-}
-
-/* =====================================================
-   GOOGLE LOGO PLACEHOLDER (LOCALHOST SAFE)
-   Replace later with Figma export or asset import
-===================================================== */
-
-const googleLogo =
-  "/logos/google.png";
+interface Review { id: number; name: string; rating: number; date: string; text: string; avatar: string; }
 
 export function GoogleReviews() {
   const { t, language } = useLanguage();
+  const [hovered, setHovered] = useState<number | null>(null);
 
-  const [expandedReviews, setExpandedReviews] =
-    useState<Set<number>>(new Set());
-
-  /* =====================================================
-     SAFE TRANSLATION FALLBACKS
-  ===================================================== */
-
-  const safeReviewsText = {
-    googleRating:
-      t?.reviews?.googleRating ||
-      "Google Rating",
-
-    subtitle:
-      t?.reviews?.subtitle ||
-      "What our clients say about us",
-
-    readMore:
-      t?.reviews?.readMore ||
-      "Read more",
-
-    showLess:
-      t?.reviews?.showLess ||
-      "Show less",
+  const safeText = {
+    googleRating: t?.reviews?.googleRating || "Google Rating",
+    subtitle:     t?.reviews?.subtitle     || "What our clients say about us",
   };
 
-  /* =====================================================
-     REVIEWS DATA
-  ===================================================== */
-
-  const reviews: Review[] =
-    language === "en"
-      ? [
-          {
-            id: 1,
-            name: "Sotiris Skaftouros",
-            rating: 5,
-            date: "4 months ago",
-            text:
-              "Exceptional experience from start to finish! Mr. Konstantopoulos is a true professional...",
-            avatar: "SS",
-          },
-          {
-            id: 2,
-            name: "Paraskevi Trapela",
-            rating: 5,
-            date: "2 years ago",
-            text:
-              "After being involved in a traffic accident, I was compensated immediately...",
-            avatar: "PT",
-          },
-          {
-            id: 3,
-            name: "Estefania Reyes",
-            rating: 5,
-            date: "2 years ago",
-            text:
-              "I unreservedly recommend it, it is the best insurance company...",
-            avatar: "ER",
-          },
-          {
-            id: 4,
-            name: "Maria Dizou",
-            rating: 5,
-            date: "2 years ago",
-            text:
-              "Very good professionals, very polite, always available!",
-            avatar: "MD",
-          },
-        ]
-      : [
-          {
-            id: 1,
-            name: "Σωτήρης Σκαφτούρος",
-            rating: 5,
-            date: "πριν 4 μήνες",
-            text:
-              "Εξαιρετική εμπειρία από την αρχή μέχρι το τέλος...",
-            avatar: "ΣΣ",
-          },
-          {
-            id: 2,
-            name: "Παρασκευή Τραπελά",
-            rating: 5,
-            date: "πριν 2 χρόνια",
-            text:
-              "Μετά από εμπλοκή σε τροχαίο ατύχημα, αποζημιώθηκα άμεσα...",
-            avatar: "ΠΤ",
-          },
-          {
-            id: 3,
-            name: "Estefania Reyes",
-            rating: 5,
-            date: "πριν 2 χρόνια",
-            text:
-              "Ανεπιφύλακτα σας το συνιστώ...",
-            avatar: "ER",
-          },
-          {
-            id: 4,
-            name: "Maria Dizou",
-            rating: 5,
-            date: "πριν 2 χρόνια",
-            text:
-              "Πολύ καλοί επαγγελματίες...",
-            avatar: "MD",
-          },
-        ];
-
-  /* =====================================================
-     EXPAND / COLLAPSE
-  ===================================================== */
-
-  const toggleExpanded = (id: number) => {
-    setExpandedReviews((prev) => {
-      const newSet = new Set(prev);
-
-      if (newSet.has(id)) {
-        newSet.delete(id);
-      } else {
-        newSet.add(id);
-      }
-
-      return newSet;
-    });
-  };
-
-  /* =====================================================
-     TEXT TRUNCATION
-  ===================================================== */
-
-  const truncateText = (
-    text: string,
-    maxLength: number
-  ) => {
-    if (text.length <= maxLength) return text;
-
-    return text.slice(0, maxLength) + "...";
-  };
-
-  /* =====================================================
-     COMPONENT
-  ===================================================== */
+  const reviews: Review[] = language === "en" ? [
+    { id: 1, name: "Sotiris Skaftouros", rating: 5, date: "4 months ago",  text: "Exceptional experience from start to finish! Mr. Konstantopoulos is a true professional — knowledgeable, patient, and genuinely invested in finding the best coverage for your needs.", avatar: "SS" },
+    { id: 2, name: "Paraskevi Trapela",  rating: 5, date: "2 years ago",   text: "After being involved in a traffic accident, I was compensated immediately. The team handled everything with great care and efficiency.", avatar: "PT" },
+    { id: 3, name: "Estefania Reyes",    rating: 5, date: "2 years ago",   text: "I unreservedly recommend Valore Assicurativo. It is the best insurance company I have ever worked with — attentive, professional, and reliable.", avatar: "ER" },
+    { id: 4, name: "Maria Dizou",        rating: 5, date: "2 years ago",   text: "Very good professionals, very polite, always available! Highly recommended.", avatar: "MD" },
+  ] : [
+    { id: 1, name: "Σωτήρης Σκαφτούρος", rating: 5, date: "πριν 4 μήνες",  text: "Εξαιρετική εμπειρία από την αρχή μέχρι το τέλος! Ο κ. Κωνσταντόπουλος είναι αληθινός επαγγελματίας — γνώστης, υπομονετικός και αφοσιωμένος.", avatar: "ΣΣ" },
+    { id: 2, name: "Παρασκευή Τραπελά",  rating: 5, date: "πριν 2 χρόνια", text: "Μετά από εμπλοκή σε τροχαίο ατύχημα, αποζημιώθηκα άμεσα. Η ομάδα χειρίστηκε τα πάντα με μεγάλη φροντίδα.", avatar: "ΠΤ" },
+    { id: 3, name: "Estefania Reyes",    rating: 5, date: "πριν 2 χρόνια", text: "Ανεπιφύλακτα σας το συνιστώ. Είναι η καλύτερη ασφαλιστική εταιρεία που έχω συνεργαστεί ποτέ.", avatar: "ER" },
+    { id: 4, name: "Maria Dizou",        rating: 5, date: "πριν 2 χρόνια", text: "Πολύ καλοί επαγγελματίες, πολύ ευγενικοί, πάντα διαθέσιμοι!", avatar: "MD" },
+  ];
 
   return (
-    <section className="py-12 md:py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <>
+      <style>{`
+        .reviews-wrap {
+          width: 100%;
+          height: 100vh;
+          display: flex;
+          flex-direction: column;
+          background: #f9fafb;
+          overflow: hidden;
+        }
+        .reviews-header {
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 28px 48px 20px;
+          background: #f9fafb;
+          border-bottom: 1px solid #ebebeb;
+        }
+        .reviews-body {
+          flex: 1;
+          display: flex;
+          min-height: 0;
+        }
 
-        {/* ================= HEADER ================= */}
+        /* Left dark panel */
+        .reviews-left {
+          flex: 0 0 32%;
+          background: #111827;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          padding: 52px 48px;
+          position: relative;
+          overflow: hidden;
+        }
+        .reviews-left-bg {
+          position: absolute;
+          bottom: -50px; right: -20px;
+          font-size: 260px; font-weight: 900;
+          color: rgba(255,255,255,0.03);
+          line-height: 1; user-select: none;
+          letter-spacing: -0.05em; pointer-events: none;
+        }
 
-        <div className="text-center mb-12">
+        /* Right — 2×2 review tiles */
+        .reviews-right {
+          flex: 1;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: 1fr 1fr;
+          background: #f9fafb;
+        }
 
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <img
-              src={googleLogo}
-              alt="Google"
-              className="h-6 object-contain"
-            />
-            <span className="text-gray-600">
-              {safeReviewsText.googleRating}
-            </span>
+        .review-tile {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          padding: 36px 40px;
+          position: relative;
+          transition: background-color 0.25s ease;
+          overflow: hidden;
+          cursor: default;
+          background: white;
+        }
+        .review-tile:nth-child(1),
+        .review-tile:nth-child(3) { border-right: 1px solid #ebebeb; }
+        .review-tile:nth-child(1),
+        .review-tile:nth-child(2) { border-bottom: 1px solid #ebebeb; }
+        .review-tile:hover { background: #fafffe; }
+
+        /* Left accent bar */
+        .review-bar {
+          position: absolute;
+          left: 0; top: 15%; bottom: 15%;
+          width: 0;
+          background: #52a447;
+          border-radius: 0 2px 2px 0;
+          transition: width 0.3s ease;
+        }
+        .review-tile:hover .review-bar { width: 3px; }
+
+        /* Quote mark */
+        .review-quote {
+          position: absolute;
+          top: 16px; right: 24px;
+          font-size: 80px;
+          font-family: Georgia, serif;
+          line-height: 1;
+          color: rgba(82,164,71,0.07);
+          user-select: none;
+          transition: color 0.3s;
+        }
+        .review-tile:hover .review-quote { color: rgba(82,164,71,0.13); }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+          .reviews-wrap { height: auto; min-height: 100vh; overflow: visible; }
+          .reviews-body { flex-direction: column; }
+          .reviews-left { flex: none; padding: 44px 28px; }
+          .reviews-right { grid-template-columns: 1fr; grid-template-rows: auto; }
+          .review-tile:nth-child(1),
+          .review-tile:nth-child(3) { border-right: none; }
+          .review-tile { border-bottom: 1px solid #ebebeb; }
+          .reviews-header { padding: 20px 24px 16px; flex-direction: column; align-items: flex-start; gap: 6px; }
+        }
+      `}</style>
+
+      <div className="reviews-wrap">
+
+        {/* Header bar */}
+        <div className="reviews-header">
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
+              <div style={{ height: 1, width: 28, backgroundColor: "#52a447" }} />
+              <span style={{ color: "#52a447", fontSize: 10, fontWeight: 800, letterSpacing: "0.2em", textTransform: "uppercase" }}>Reviews</span>
+            </div>
+            <h2 style={{ fontSize: "clamp(18px, 2vw, 26px)", fontWeight: 700, color: "#111827", letterSpacing: "-0.02em", margin: 0 }}>
+              {safeText.subtitle}
+            </h2>
           </div>
-
-          <div className="flex items-center justify-center gap-1 mb-2">
-
-            {[1, 2, 3, 4, 5].map((star) => (
-              <Star
-                key={star}
-                className="
-                  w-6 h-6
-                  fill-[#fbbc04]
-                  text-[#fbbc04]
-                "
-              />
-            ))}
-
-            <span className="ml-2 text-xl">
-              5.0
-            </span>
+          {/* Google badge */}
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 10, backgroundColor: "white", border: "1px solid #f0f0f0", borderRadius: 999, padding: "8px 20px", boxShadow: "0 1px 8px rgba(0,0,0,0.04)" }}>
+            <img src="/logos/google.png" alt="Google" style={{ height: 16, objectFit: "contain" }} />
+            <div style={{ display: "flex", gap: 2 }}>
+              {[1,2,3,4,5].map(s => <Star key={s} size={12} style={{ fill: "#fbbc04", color: "#fbbc04" }} />)}
+            </div>
+            <span style={{ fontWeight: 700, fontSize: 13, color: "#111827" }}>5.0</span>
+            <span style={{ color: "#9ca3af", fontSize: 12 }}>· {safeText.googleRating}</span>
           </div>
-
-          <p className="text-gray-600">
-            {safeReviewsText.subtitle}
-          </p>
         </div>
 
-        {/* ================= GRID ================= */}
+        <div className="reviews-body">
 
-        <div className="
-          grid
-          grid-cols-1
-          md:grid-cols-2
-          lg:grid-cols-3
-          gap-6
-        ">
+          {/* Left dark panel */}
+          <div className="reviews-left">
+            <span className="reviews-left-bg">"</span>
 
-          {reviews.map((review) => {
-            const isExpanded =
-              expandedReviews.has(review.id);
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 28 }}>
+              <div style={{ height: 1, width: 28, backgroundColor: "rgba(255,255,255,0.25)" }} />
+              <span style={{ color: "rgba(255,255,255,0.4)", fontSize: 10, fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase" }}>
+                Google Reviews
+              </span>
+            </div>
 
-            const shouldTruncate =
-              review.text.length > 150;
+            <p style={{ fontSize: "clamp(20px, 2vw, 28px)", fontWeight: 300, color: "white", lineHeight: 1.7, marginBottom: 48, position: "relative", zIndex: 1 }}>
+              {language === "el"
+                ? "Αυτό που λένε οι πελάτες μας μιλά από μόνο του."
+                : "What our clients say speaks for itself."}
+            </p>
 
-            return (
+            {/* Rating display */}
+            <div style={{ display: "flex", alignItems: "flex-end", gap: 16, marginBottom: 24 }}>
+              <span style={{ fontSize: 72, fontWeight: 800, color: "white", lineHeight: 1, letterSpacing: "-0.04em" }}>5.0</span>
+              <div style={{ paddingBottom: 8 }}>
+                <div style={{ display: "flex", gap: 3, marginBottom: 6 }}>
+                  {[1,2,3,4,5].map(s => <Star key={s} size={16} style={{ fill: "#fbbc04", color: "#fbbc04" }} />)}
+                </div>
+                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", letterSpacing: "0.05em" }}>
+                  {language === "el" ? "Βαθμολογία Google" : "Google Rating"}
+                </span>
+              </div>
+            </div>
+
+            <div style={{ height: 1, width: "100%", backgroundColor: "rgba(255,255,255,0.08)", marginBottom: 24 }} />
+
+            <span style={{ fontSize: 13, color: "rgba(255,255,255,0.35)" }}>
+              {language === "el" ? `${reviews.length} κριτικές` : `${reviews.length} reviews`}
+            </span>
+          </div>
+
+          {/* Right 2×2 review tiles */}
+          <div className="reviews-right">
+            {reviews.map((review, i) => (
               <div
                 key={review.id}
-                className="
-                  bg-white
-                  rounded-lg
-                  p-6
-                  shadow-sm
-                  border
-                  border-gray-200
-                "
+                className="review-tile"
+                onMouseEnter={() => setHovered(i)}
+                onMouseLeave={() => setHovered(null)}
               >
-
-                {/* User */}
-
-                <div className="flex items-start gap-3 mb-4">
-
-                  <div className="
-                    w-10 h-10
-                    rounded-full
-                    bg-[#52a447]
-                    text-white
-                    flex
-                    items-center
-                    justify-center
-                    flex-shrink-0
-                  ">
-                    {review.avatar}
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <div className="truncate">
-                      {review.name}
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      {review.date}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Stars */}
-
-                <div className="flex gap-1 mb-3">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      className={`w-4 h-4 ${
-                        star <= review.rating
-                          ? "fill-[#fbbc04] text-[#fbbc04]"
-                          : "text-gray-300"
-                      }`}
-                    />
-                  ))}
-                </div>
+                <div className="review-bar" />
+                <span className="review-quote">"</span>
 
                 {/* Text */}
-
-                <p className="text-gray-700 text-sm leading-relaxed">
-                  {isExpanded || !shouldTruncate
-                    ? review.text
-                    : truncateText(
-                        review.text,
-                        150
-                      )}
+                <p style={{ fontSize: "clamp(13px, 1.1vw, 15px)", color: "#374151", lineHeight: 1.75, flex: 1, position: "relative", zIndex: 1, marginBottom: 24 }}>
+                  {review.text}
                 </p>
 
-                {/* Expand */}
+                {/* User row */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <div style={{
+                      width: 38, height: 38, borderRadius: "50%",
+                      backgroundColor: hovered === i ? "#52a447" : "#111827",
+                      color: "white", display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: 11, fontWeight: 700, flexShrink: 0,
+                      transition: "background-color 0.25s",
+                    }}>
+                      {review.avatar}
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: "#111827" }}>{review.name}</div>
+                      <div style={{ fontSize: 11, color: "#9ca3af" }}>{review.date}</div>
+                    </div>
+                  </div>
 
-                {shouldTruncate && (
-                  <button
-                    onClick={() =>
-                      toggleExpanded(review.id)
-                    }
-                    className="
-                      text-[#52a447]
-                      text-sm
-                      mt-2
-                      hover:underline
-                    "
-                  >
-                    {isExpanded
-                      ? safeReviewsText.showLess
-                      : safeReviewsText.readMore}
-                  </button>
-                )}
+                  {/* Stars */}
+                  <div style={{ display: "flex", gap: 2 }}>
+                    {[1,2,3,4,5].map(s => (
+                      <Star key={s} size={12} style={{ fill: "#fbbc04", color: "#fbbc04" }} />
+                    ))}
+                  </div>
+                </div>
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
       </div>
-    </section>
+    </>
   );
 }

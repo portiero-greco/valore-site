@@ -20,23 +20,21 @@ export default function App() {
     <LanguageProvider>
       <Router>
         <ScrollToTop />
-        <div className="min-h-screen bg-white">
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/personal-insurance" element={<PersonalInsurancePage />} />
-            <Route path="/boat-insurance" element={<BoatInsurancePage />} />
-            <Route path="/health-programs" element={<HealthProgramsPage />} />
-            <Route path="/pet-insurance" element={<PetInsurancePage />} />
-            <Route path="/home-insurance" element={<HomeInsurancePage />} />
-            <Route path="/vehicle-insurance" element={<VehicleInsurancePage />} />
-            <Route path="/faq-individuals" element={<FAQIndividualsPage />} />
-            <Route path="/business-solutions" element={<BusinessSolutionsPage />} />
-            <Route path="/faq-businesses" element={<FAQBusinessesPage />} />
-            <Route path="/health-form" element={<HealthFormPage />} />
-            <Route path="/property-form" element={<PropertyFormPage />} />
-          </Routes>
-        </div>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/personal-insurance" element={<PersonalInsurancePage />} />
+          <Route path="/boat-insurance" element={<BoatInsurancePage />} />
+          <Route path="/health-programs" element={<HealthProgramsPage />} />
+          <Route path="/pet-insurance" element={<PetInsurancePage />} />
+          <Route path="/home-insurance" element={<HomeInsurancePage />} />
+          <Route path="/vehicle-insurance" element={<VehicleInsurancePage />} />
+          <Route path="/faq-individuals" element={<FAQIndividualsPage />} />
+          <Route path="/business-solutions" element={<BusinessSolutionsPage />} />
+          <Route path="/faq-businesses" element={<FAQBusinessesPage />} />
+          <Route path="/health-form" element={<HealthFormPage />} />
+          <Route path="/property-form" element={<PropertyFormPage />} />
+        </Routes>
       </Router>
     </LanguageProvider>
   );

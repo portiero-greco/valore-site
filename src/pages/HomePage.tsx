@@ -4,53 +4,60 @@ import { Clients } from "../components/Clients";
 import { History } from "../components/History";
 import { UniqueCoverages } from "../components/UniqueCoverages";
 import { IndividualSolutions } from "../components/IndividualSolutions";
+import { BusinessSolutionsPage } from "../pages/BusinessSolutionsPage";
 import { Contact } from "../components/Contact";
 import { Connections } from "../components/Connections";
-import { Footer } from "../components/Footer";
 import { GoogleReviews } from "../components/GoogleReviews";
+
 
 export function HomePage() {
   return (
-    <div className="bg-white">
-
-      <Hero />
-
-      <div className="my-32">
-        <About />
+    <div
+      style={{
+        overflowY: "auto",
+        overflowX: "hidden",
+      }}
+      id="scroll-container"
+    >
+      {/* 1 — Hero */}
+      <div id="hero">
+        <Hero />
       </div>
 
-      <div className="my-32">
-        <Clients />
-      </div>
-
-      <div className="my-32">
+      {/* 3 — Individual Solutions */}
+      <div id="individual-solutions">
         <IndividualSolutions />
       </div>
 
-      <div className="my-40">   {/* 🔥 EXTRA GAP HERE */}
+      {/* 4 — Business Solutions */}
+      <div id="business-solutions">
+        <BusinessSolutionsPage />
+      </div>
+
+      {/* 5 — History */}
+      <div id="history">
         <History />
       </div>
 
-      <div className="my-40">   {/* 🔥 EXTRA GAP HERE */}
+      {/* 6 — Unique Coverages */}
+      <div id="unique-coverages">
         <UniqueCoverages />
       </div>
 
-      <div className="my-32">
-        <Contact />
+      {/* 7 — Clients */}
+      <div id="clients">
+        <Clients />
       </div>
 
-      <div className="my-32">
+      {/* 8 — Connections */}
+      <div id="connections">
         <Connections />
       </div>
 
-      <div className="my-32">
-        <GoogleReviews />
+      {/* 10 — Contact */}
+      <div id="contact">
+        <Contact />
       </div>
-
-      <div className="pt-24">
-        <Footer />
-      </div>
-
     </div>
   );
 }

@@ -1,313 +1,288 @@
-import { useState, useRef } from "react";
-import { Menu, X, Languages, ChevronDown } from "lucide-react";
-import { Button } from "./ui/button";
+import { useState, useEffect, useRef } from "react";
+import { Languages, Home, Clock, Shield, Star, Users, Link2, Phone, FileText, Building2, ChevronRight } from "lucide-react";
 import { useLanguage } from "../lib/LanguageContext";
-import { assets } from "../lib/assets";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isInsuranceOpen, setIsInsuranceOpen] = useState(false);
-  const [isFormsOpen, setIsFormsOpen] = useState(false);
+  const [atTop, setAtTop] = useState(true);
+  const [expandedItem, setExpandedItem] = useState<string | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { language, setLanguage, t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
-  const timeoutRef = useRef<number | null>(null);
-  const formsTimeoutRef = useRef<number | null>(null);
+  const lastScrollY = useRef(0);
+  const hoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const hideOn = [
+    "/personal-insurance",
+    "/boat-insurance",
+    "/health-programs",
+    "/pet-insurance",
+    "/home-insurance",
+    "/vehicle-insurance",
+    "/faq-individuals",
+    "/business-solutions",
+    "/faq-businesses",
+    "/health-form",
+    "/property-form",
+  ];
+
+  useEffect(() => {
+    const getContainer = () => document.getElementById("scroll-container") || window;
+    let container = getContainer();
+    const handleScroll = () => {
+      const scrollY = container instanceof Window ? window.scrollY : (container as HTMLElement).scrollTop;
+      setAtTop(scrollY < 40);
+      lastScrollY.current = scrollY;
+    };
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [location.pathname]);
 
   const scrollToSection = (id: string) => {
-    // If we're not on the home page, navigate there first
-    if (location.pathname !== "/") {
-      navigate(`/#${id}`);
-    } else {
-      // If we're already on home page, just scroll
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    if (location.pathname !== "/") { navigate(`/#${id}`); }
+    else {
+      const target = document.getElementById(id);
+      if (target) target.scrollIntoView({ behavior: "smooth" });
     }
-    setIsOpen(false);
-    setIsInsuranceOpen(false);
-    setIsFormsOpen(false);
+    setExpandedItem(null);
+    setSidebarOpen(false);
   };
 
-  const toggleLanguage = () => {
-    setLanguage(language === "en" ? "el" : "en");
-  };
+  const toggleLanguage = () => setLanguage(language === "en" ? "el" : "en");
 
-  const handleMouseEnter = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
-    setIsInsuranceOpen(true);
-  };
-
-  const handleMouseLeave = () => {
-    timeoutRef.current = window.setTimeout(() => {
-      setIsInsuranceOpen(false);
-    }, 150);
-  };
-
-  const handleFormsMouseEnter = () => {
-    if (formsTimeoutRef.current) {
-      clearTimeout(formsTimeoutRef.current);
-      formsTimeoutRef.current = null;
-    }
-    setIsFormsOpen(true);
-  };
-
-  const handleFormsMouseLeave = () => {
-    formsTimeoutRef.current = window.setTimeout(() => {
-      setIsFormsOpen(false);
-    }, 150);
-  };
-
-  const navLinks = [
-    { label: t.nav.about, href: "about" },
-    { label: t.nav.history, href: "history" }
+  const navItems = [
+    { id: "home",     icon: Home,      label: language === "el" ? "Αρχική"       : "Home",               href: "hero",                 type: "scroll", sub: null },
+    { id: "history",  icon: Clock,     label: language === "el" ? "Ιστορία"      : "History",             href: "history",              type: "scroll", sub: null },
+    { id: "ind",      icon: Shield,    label: language === "el" ? "Λύσεις"       : "Solutions",           href: "individual-solutions", type: "scroll",
+      sub: [
+        { label: language === "el" ? "Ιδιώτες"      : "For Individuals", href: "individual-solutions", type: "scroll" },
+        { label: language === "el" ? "Επιχειρήσεις" : "For Businesses",  href: "/business-solutions",  type: "route"  },
+        { label: language === "el" ? "FAQ Ιδιώτες"  : "FAQ Individuals", href: "/faq-individuals",     type: "route"  },
+        { label: language === "el" ? "FAQ Επιχ."    : "FAQ Businesses",  href: "/faq-businesses",      type: "route"  },
+      ]
+    },
+    { id: "unique",   icon: Star,      label: language === "el" ? "Μοναδικές Καλύψεις" : "Unique Coverages", href: "unique-coverages", type: "scroll", sub: null },
+    { id: "clients",  icon: Users,     label: language === "el" ? "Πελάτες"      : "Clients",             href: "clients",              type: "scroll", sub: null },
+    { id: "partners", icon: Link2,     label: language === "el" ? "Συνεργάτες"   : "Partners",            href: "connections",          type: "scroll", sub: null },
+    { id: "forms",    icon: FileText,  label: language === "el" ? "Φόρμες"       : "Forms",               href: "/health-form",         type: "route",
+      sub: [
+        { label: language === "el" ? "Φόρμα Υγείας"   : "Health Form",   href: "/health-form",   type: "route" },
+        { label: language === "el" ? "Φόρμα Ακινήτου" : "Property Form", href: "/property-form", type: "route" },
+      ]
+    },
+    { id: "contact",  icon: Phone,     label: language === "el" ? "Επικοινωνία"  : "Contact",             href: "contact",              type: "scroll", sub: null },
   ];
 
-  const navLinksAfter = [
-    { label: t.nav.uniqueCoverages, href: "unique-coverages" },
-    { label: t.nav.contact, href: "contact" }
-  ];
+  const handleItemEnter = (id: string) => {
+    if (hoverTimeout.current) clearTimeout(hoverTimeout.current);
+    setExpandedItem(id);
+  };
+  const handleItemLeave = () => {
+    hoverTimeout.current = setTimeout(() => setExpandedItem(null), 150);
+  };
+  const handleSubEnter = () => {
+    if (hoverTimeout.current) clearTimeout(hoverTimeout.current);
+  };
 
-  const insuranceDropdownItems = [
-    { label: t.nav.solutionsForIndividuals, href: "individual-solutions", type: "scroll" },
-    { label: t.nav.faqIndividuals, href: "/faq-individuals", type: "route" },
-    { label: t.nav.solutionsForBusinesses, href: "/business-solutions", type: "route" },
-    { label: t.nav.faqBusinesses, href: "/faq-businesses", type: "route" }
-  ];
-
-  const formsDropdownItems = [
-    { label: t.nav.healthForm, href: "/health-form", type: "route" },
-    { label: t.nav.propertyForm, href: "/property-form", type: "route" }
-  ];
+  if (hideOn.includes(location.pathname)) return null;
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          <div className="flex items-center">
-            <Link to="/">
-              <img 
-                src={assets.logo} 
-                alt="Valore Assicurativo" 
-                className="h-12 w-auto cursor-pointer"
-              />
-            </Link>
-          </div>
+    <>
+      <style>{`
+        .nb-rail {
+          position: fixed;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 199;
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          padding: 8px 0;
+          background: rgba(255,255,255,0.07);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border-right: 1px solid rgba(255,255,255,0.1);
+          border-radius: 0 10px 10px 0;
+        }
+        .nb-rail.nb-rail-solid {
+          background: rgba(255,255,255,0.96);
+          border-right: 1px solid #e5e7eb;
+          box-shadow: 4px 0 24px rgba(0,0,0,0.06);
+        }
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <button
-                key={link.href}
-                onClick={() => scrollToSection(link.href)}
-                className="text-gray-700 hover:text-green-600 transition-colors"
-              >
-                {link.label}
-              </button>
-            ))}
-            
-            {/* Insurance Dropdown */}
-            <div 
-              className="relative"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              <button
-                className="text-gray-700 hover:text-green-600 transition-colors flex items-center gap-1"
-              >
-                {t.nav.insurance}
-                <ChevronDown className={`w-4 h-4 transition-transform ${isInsuranceOpen ? 'rotate-180' : ''}`} />
-              </button>
-              
-              {/* Dropdown Menu */}
-              {isInsuranceOpen && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
-                  {insuranceDropdownItems.map((item) => (
-                    <button
-                      key={item.href}
-                      onClick={() => {
-                        if (item.type === "route") {
-                          navigate(item.href);
-                        } else {
-                          scrollToSection(item.href);
-                        }
-                      }}
-                      className="w-full text-left px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
-                    >
-                      {item.label}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+        .nb-rail-btn {
+          position: relative;
+          width: 52px;
+          height: 44px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: none;
+          border: none;
+          cursor: pointer;
+          border-left: 2px solid transparent;
+          transition: background 0.2s, border-color 0.2s;
+          color: rgba(255,255,255,0.6);
+        }
+        .nb-rail-solid .nb-rail-btn { color: #6b7280; }
+        .nb-rail-btn:hover,
+        .nb-rail-btn.active {
+          background: rgba(82,164,71,0.12);
+          border-left-color: #52a447;
+          color: #52a447;
+        }
 
-            {/* Forms Dropdown */}
-            <div 
-              className="relative"
-              onMouseEnter={handleFormsMouseEnter}
-              onMouseLeave={handleFormsMouseLeave}
-            >
-              <button
-                className="text-gray-700 hover:text-green-600 transition-colors flex items-center gap-1"
-              >
-                {t.nav.forms}
-                <ChevronDown className={`w-4 h-4 transition-transform ${isFormsOpen ? 'rotate-180' : ''}`} />
-              </button>
-              
-              {/* Dropdown Menu */}
-              {isFormsOpen && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
-                  {formsDropdownItems.map((item) => (
-                    <button
-                      key={item.href}
-                      onClick={() => {
-                        if (item.type === "route") {
-                          navigate(item.href);
-                        } else {
-                          scrollToSection(item.href);
-                        }
-                      }}
-                      className="w-full text-left px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
-                    >
-                      {item.label}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+        .nb-panel {
+          position: fixed;
+          left: 52px;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 198;
+          background: rgba(255,255,255,0.97);
+          border: 1px solid #e5e7eb;
+          border-radius: 0 10px 10px 0;
+          box-shadow: 6px 0 32px rgba(0,0,0,0.08);
+          min-width: 200px;
+          overflow: hidden;
+          animation: nb-slide-in 0.18s ease;
+        }
+        @keyframes nb-slide-in {
+          from { opacity: 0; transform: translateY(-50%) translateX(-8px); }
+          to   { opacity: 1; transform: translateY(-50%) translateX(0);    }
+        }
 
-            {navLinksAfter.map((link) => (
-              <button
-                key={link.href}
-                onClick={() => scrollToSection(link.href)}
-                className="text-gray-700 hover:text-green-600 transition-colors"
-              >
-                {link.label}
-              </button>
-            ))}
+        .nb-panel-header {
+          padding: 14px 18px 10px;
+          font-size: 10px;
+          font-weight: 800;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: #9ca3af;
+          border-bottom: 1px solid #f3f4f6;
+        }
 
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleLanguage}
-              className="gap-2"
-            >
-              <Languages className="w-4 h-4" />
-              {language === "en" ? "ΕΛ" : "EN"}
-            </Button>
-          </div>
+        .nb-panel-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          padding: 11px 18px;
+          font-size: 13.5px;
+          font-weight: 500;
+          color: #374151;
+          background: none;
+          border: none;
+          cursor: pointer;
+          text-align: left;
+          transition: background 0.15s, color 0.15s;
+          white-space: nowrap;
+        }
+        .nb-panel-item:hover { background: rgba(82,164,71,0.07); color: #52a447; }
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleLanguage}
-              className="gap-2"
-            >
-              <Languages className="w-4 h-4" />
-              {language === "en" ? "ΕΛ" : "EN"}
-            </Button>
+        .nb-subpanel {
+          position: fixed;
+          left: 252px;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 197;
+          background: white;
+          border: 1px solid #e5e7eb;
+          border-radius: 10px;
+          box-shadow: 6px 0 32px rgba(0,0,0,0.08);
+          min-width: 180px;
+          overflow: hidden;
+          animation: nb-slide-in 0.15s ease;
+        }
+
+        .nb-subpanel-item {
+          display: block;
+          width: 100%;
+          padding: 11px 18px;
+          font-size: 13px;
+          font-weight: 500;
+          color: #374151;
+          background: none;
+          border: none;
+          cursor: pointer;
+          text-align: left;
+          transition: background 0.15s, color 0.15s;
+          white-space: nowrap;
+        }
+        .nb-subpanel-item:hover { background: rgba(82,164,71,0.07); color: #52a447; }
+
+        .nb-rail-divider {
+          height: 1px;
+          margin: 4px 8px;
+          background: rgba(255,255,255,0.12);
+          transition: background 0.3s;
+        }
+        .nb-rail-solid .nb-rail-divider { background: #e5e7eb; }
+
+        @media (max-width: 768px) {
+          .nb-rail, .nb-panel, .nb-subpanel { display: none; }
+        }
+      `}</style>
+
+      <div className={`nb-rail${atTop ? "" : " nb-rail-solid"}`}>
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = expandedItem === item.id;
+          return (
             <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-700 hover:text-green-600"
+              key={item.id}
+              className={`nb-rail-btn${isActive ? " active" : ""}`}
+              onMouseEnter={() => handleItemEnter(item.id)}
+              onMouseLeave={handleItemLeave}
+              onClick={() => !item.sub && (item.type === "route" ? navigate(item.href) : scrollToSection(item.href))}
+              title={item.label}
             >
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              <Icon size={17} />
             </button>
-          </div>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="md:hidden pb-4">
-            <div className="flex flex-col space-y-3">
-              {navLinks.map((link) => (
-                <button
-                  key={link.href}
-                  onClick={() => scrollToSection(link.href)}
-                  className="text-gray-700 hover:text-green-600 transition-colors text-left py-2"
-                >
-                  {link.label}
-                </button>
-              ))}
-              
-              {/* Mobile Insurance Dropdown */}
-              <div>
-                <button
-                  onClick={() => setIsInsuranceOpen(!isInsuranceOpen)}
-                  className="text-gray-700 hover:text-green-600 transition-colors text-left py-2 flex items-center gap-1 w-full"
-                >
-                  {t.nav.insurance}
-                  <ChevronDown className={`w-4 h-4 transition-transform ${isInsuranceOpen ? 'rotate-180' : ''}`} />
-                </button>
-                
-                {isInsuranceOpen && (
-                  <div className="pl-4 flex flex-col space-y-2 mt-2">
-                    {insuranceDropdownItems.map((item) => (
-                      <button
-                        key={item.href}
-                        onClick={() => {
-                          if (item.type === "route") {
-                            navigate(item.href);
-                          } else {
-                            scrollToSection(item.href);
-                          }
-                        }}
-                        className="text-gray-600 hover:text-green-600 transition-colors text-left py-2"
-                      >
-                        {item.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Mobile Forms Dropdown */}
-              <div>
-                <button
-                  onClick={() => setIsFormsOpen(!isFormsOpen)}
-                  className="text-gray-700 hover:text-green-600 transition-colors text-left py-2 flex items-center gap-1 w-full"
-                >
-                  {t.nav.forms}
-                  <ChevronDown className={`w-4 h-4 transition-transform ${isFormsOpen ? 'rotate-180' : ''}`} />
-                </button>
-                
-                {isFormsOpen && (
-                  <div className="pl-4 flex flex-col space-y-2 mt-2">
-                    {formsDropdownItems.map((item) => (
-                      <button
-                        key={item.href}
-                        onClick={() => {
-                          if (item.type === "route") {
-                            navigate(item.href);
-                          } else {
-                            scrollToSection(item.href);
-                          }
-                        }}
-                        className="text-gray-600 hover:text-green-600 transition-colors text-left py-2"
-                      >
-                        {item.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {navLinksAfter.map((link) => (
-                <button
-                  key={link.href}
-                  onClick={() => scrollToSection(link.href)}
-                  className="text-gray-700 hover:text-green-600 transition-colors text-left py-2"
-                >
-                  {link.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+          );
+        })}
+        <div className="nb-rail-divider" />
+        <button
+          className="nb-rail-btn"
+          onClick={toggleLanguage}
+          title={language === "en" ? "Switch to Greek" : "Switch to English"}
+        >
+          <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.08em" }}>
+            {language === "en" ? "ΕΛ" : "EN"}
+          </span>
+        </button>
       </div>
-    </nav>
+
+      {expandedItem && (() => {
+        const item = navItems.find(n => n.id === expandedItem);
+        if (!item) return null;
+        return (
+          <div
+            className="nb-panel"
+            onMouseEnter={handleSubEnter}
+            onMouseLeave={handleItemLeave}
+          >
+            <div className="nb-panel-header">{item.label}</div>
+            {item.sub ? (
+              item.sub.map((s, i) => (
+                <button key={i} className="nb-panel-item"
+                  onClick={() => s.type === "route" ? (navigate(s.href), setExpandedItem(null)) : scrollToSection(s.href)}
+                >
+                  {s.label}
+                  <ChevronRight size={13} style={{ color: "#d1d5db" }} />
+                </button>
+              ))
+            ) : (
+              <button className="nb-panel-item"
+                onClick={() => item.type === "route" ? (navigate(item.href), setExpandedItem(null)) : scrollToSection(item.href)}
+              >
+                {language === "el" ? "Μετάβαση" : "Go to"} {item.label}
+              </button>
+            )}
+          </div>
+        );
+      })()}
+    </>
   );
 }
