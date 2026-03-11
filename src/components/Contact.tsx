@@ -23,6 +23,32 @@ export function Contact() {
     : "We're here for you. Reach out to us today.";
   const cta = language === "el" ? "Στείλτε μήνυμα" : "Send a message";
 
+  const infoItems = [
+    {
+      icon: MapPin,
+      label: safeContact.headquarters,
+      values: safeContact.address.map((line: string) => ({ text: line, href: undefined })),
+    },
+    {
+      icon: Phone,
+      label: safeContact.phone,
+      values: safeContact.phones.map((p: string, i: number) => ({
+        text: p,
+        href: i === 0 ? "tel:2104177760" : "viber://chat?number=%2B306986504754",
+      })),
+    },
+    {
+      icon: Mail,
+      label: safeContact.email,
+      values: safeContact.emails.map((e: string) => ({ text: e, href: `mailto:${e}` })),
+    },
+    {
+      icon: Clock,
+      label: safeContact.hours,
+      values: safeContact.schedule.map((s: string) => ({ text: s, href: undefined })),
+    },
+  ];
+
   return (
     <>
       <style>{`
@@ -38,199 +64,152 @@ export function Contact() {
           overflow: hidden;
         }
 
+        /* ── HERO ── */
         .ct-hero {
           position: relative;
-          padding: 100px 56px 48px 108px;
+          padding: 100px 72px 56px;
           border-bottom: 1px solid rgba(255,255,255,0.08);
-          flex-shrink: 0;
           overflow: hidden;
-          min-height: 300px;
+          min-height: 320px;
           display: flex;
           flex-direction: column;
           justify-content: flex-end;
         }
         .ct-hero-bg {
-          position: absolute;
-          inset: 0;
+          position: absolute; inset: 0;
           background-image: url('https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1600&q=80');
-          background-size: cover;
-          background-position: center 40%;
-          z-index: 0;
+          background-size: cover; background-position: center 40%; z-index: 0;
         }
         .ct-hero-overlay {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.75) 100%);
+          position: absolute; inset: 0;
+          background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(13,13,13,0.92) 100%);
           z-index: 1;
         }
-        .ct-hero > *:not(.ct-hero-bg):not(.ct-hero-overlay) {
-          position: relative;
-          z-index: 2;
-        }
+        .ct-hero > *:not(.ct-hero-bg):not(.ct-hero-overlay) { position: relative; z-index: 2; }
 
         .ct-headline {
-          font-family: 'DM Sans', sans-serif;
-          font-weight: 300;
-          font-size: clamp(36px, 4vw, 64px);
-          line-height: 1.1;
-          letter-spacing: -0.02em;
-          color: #fff;
-          margin: 0 0 24px;
+          font-weight: 300; font-size: clamp(36px, 4vw, 64px);
+          line-height: 1.1; letter-spacing: -0.02em;
+          color: #fff; margin: 0 0 24px;
         }
         .ct-headline span { color: #52a447; }
 
-        .ct-meta {
-          display: flex;
-          align-items: center;
-          gap: 24px;
-          flex-wrap: wrap;
-        }
+        .ct-meta { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
         .ct-eyebrow { display: flex; align-items: center; gap: 10px; }
         .ct-eyebrow-line  { height: 1px; width: 28px; background: #52a447; }
         .ct-eyebrow-label { font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: #52a447; }
-        .ct-sub { font-size: 14px; font-weight: 300; color: rgba(255,255,255,0.6); max-width: 340px; line-height: 1.65; margin: 0; }
+        .ct-sub { font-size: 14px; font-weight: 300; color: rgba(255,255,255,0.55); max-width: 340px; line-height: 1.65; margin: 0; }
 
+        /* ── BODY ── */
         .ct-body {
           flex: 1;
-          display: flex;
-          min-height: 0;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
         }
 
+        /* ── LEFT PANEL – brand / CTA ── */
         .ct-left {
-          flex: 0 0 38%;
-          background: #0d0d0d;
+          background: #111;
           display: flex;
           flex-direction: column;
           justify-content: center;
           padding: 64px 56px;
-          position: relative;
-          overflow: hidden;
           border-right: 1px solid rgba(255,255,255,0.06);
         }
+        .ct-brand-tag {
+          display: flex; align-items: center; gap: 10px; margin-bottom: 32px;
+        }
+        .ct-brand-tag-line { height: 1px; width: 28px; background: rgba(255,255,255,0.15); }
+        .ct-brand-tag-label { color: rgba(255,255,255,0.3); font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; }
+
         .ct-left-quote {
-          font-family: 'DM Sans', sans-serif;
-          font-size: clamp(18px, 1.8vw, 24px);
-          font-weight: 300;
-          color: white;
-          line-height: 1.6;
-          margin: 0 0 44px;
+          font-size: clamp(18px, 1.8vw, 24px); font-weight: 300;
+          color: white; line-height: 1.6; margin: 0 0 48px;
         }
         .ct-left-quote span { color: #52a447; }
 
-        .ct-left-links { display: flex; flex-direction: column; gap: 16px; }
-        .ct-left-link {
-          display: flex; align-items: center; gap: 14px;
-          text-decoration: none; transition: opacity 0.2s;
-        }
-        .ct-left-link:hover { opacity: 0.7; }
-        .ct-left-link-icon {
-          width: 36px; height: 36px; border-radius: 8px;
-          background: rgba(255,255,255,0.06);
-          display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-        }
-        .ct-left-link-text { font-size: 14px; font-weight: 300; color: rgba(255,255,255,0.6); }
-
         .ct-cta {
-          margin-top: 44px;
           display: inline-flex; align-items: center; gap: 8px;
           background: transparent;
           border: 1px solid rgba(255,255,255,0.15);
-          color: white;
-          font-size: 13px; font-weight: 400;
+          color: white; font-size: 13px; font-weight: 400;
           padding: 12px 24px; border-radius: 6px;
           text-decoration: none; align-self: flex-start;
           transition: border-color 0.2s, color 0.2s;
         }
         .ct-cta:hover { border-color: #52a447; color: #52a447; }
 
+        /* ── RIGHT PANEL – info rows ── */
         .ct-right {
-          flex: 1;
+          background: #f8f8f6;
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
-          padding: 48px 72px;
-          position: relative;
-          overflow: hidden;
+          justify-content: center;
+          padding: 64px 72px;
         }
 
-
-
-        .ct-info-rows {
-          position: relative;
-          z-index: 1;
-          display: flex;
-          flex-direction: column;
-        }
+        .ct-info-rows { display: flex; flex-direction: column; }
 
         .ct-info-row {
-          display: flex;
-          align-items: flex-start;
+          display: flex; align-items: flex-start;
           padding: 28px 0;
-          border-bottom: 1px solid #f0f0f0;
+          border-bottom: 1px solid rgba(0,0,0,0.08);
           gap: 32px;
         }
-        .ct-info-row:first-child { border-top: 1px solid #f0f0f0; }
+        .ct-info-row:first-child { border-top: 1px solid rgba(0,0,0,0.08); }
 
         .ct-info-icon-col {
-          display: flex;
-          align-items: center;
-          gap: 14px;
-          flex: 0 0 200px;
+          display: flex; align-items: center; gap: 14px;
+          flex: 0 0 190px;
         }
         .ct-info-icon {
           width: 36px; height: 36px; border-radius: 8px;
-          background: rgba(82,164,71,0.06);
+          background: rgba(82,164,71,0.08);
           display: flex; align-items: center; justify-content: center;
           flex-shrink: 0; transition: background 0.25s;
         }
         .ct-info-row:hover .ct-info-icon { background: #52a447; }
-        .ct-info-row:hover .ct-info-icon svg { color: white; }
+        .ct-info-row:hover .ct-info-icon svg { color: white !important; }
         .ct-info-icon svg { color: #52a447; transition: color 0.25s; }
 
         .ct-info-label {
           font-size: 10px; font-weight: 500;
-          letter-spacing: 0.18em; text-transform: uppercase;
-          color: #9ca3af;
+          letter-spacing: 0.18em; text-transform: uppercase; color: #9ca3af;
         }
 
-        .ct-info-values {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          gap: 2px;
-        }
+        .ct-info-values { flex: 1; display: flex; flex-direction: column; gap: 2px; }
 
         .ct-info-val {
-          font-family: 'DM Sans', sans-serif;
-          font-size: clamp(15px, 1.3vw, 19px);
-          font-weight: 400;
-          color: #0d0d0d;
-          letter-spacing: 0;
-          line-height: 1.45;
-          text-decoration: none;
-          display: block;
-          transition: color 0.2s;
+          font-size: clamp(15px, 2.5vw, 18px); font-weight: 400;
+          color: #0d0d0d; line-height: 1.45;
+          text-decoration: none; display: block; transition: color 0.2s;
         }
         a.ct-info-val:hover { color: #52a447; }
 
-        @media (max-width: 768px) {
-          .ct-hero { padding: 80px 24px 40px; min-height: 220px; }
-          .ct-headline { font-size: clamp(32px, 8vw, 48px); margin-bottom: 16px; }
-          .ct-sub { max-width: 100%; }
-          .ct-body { flex-direction: column; }
-          .ct-left { flex: 1; padding: 40px 24px; border-right: none; border-bottom: none; width: 100%; }
-          .ct-right { display: none !important; width: 0; flex: 0; padding: 0; overflow: hidden; }
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+          .ct-body { grid-template-columns: 1fr; }
+          .ct-left { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); padding: 48px 32px; }
+          .ct-right { padding: 48px 32px; }
+          .ct-info-val { font-size: 16px; }
         }
-
-        @media (max-width: 480px) {
-          .ct-hero { padding: 72px 20px 32px; }
-          .ct-left { padding: 36px 20px; }
+        @media (max-width: 600px) {
+          .ct-hero { padding: 80px 24px 40px; min-height: 220px; }
+          .ct-sub { max-width: 100%; }
+          .ct-left { padding: 40px 20px; }
+          .ct-right { padding: 32px 20px; }
           .ct-cta { width: 100%; justify-content: center; }
+
+          /* stack icon+label above values on small screens */
+          .ct-info-row { flex-direction: column; gap: 10px; padding: 22px 0; }
+          .ct-info-icon-col { flex: none; }
+          .ct-info-val { font-size: 15px; }
         }
       `}</style>
 
       <div className="ct-wrap" id="contact">
 
+        {/* HERO */}
         <div className="ct-hero">
           <div className="ct-hero-bg" />
           <div className="ct-hero-overlay" />
@@ -246,92 +225,48 @@ export function Contact() {
           </div>
         </div>
 
+        {/* BODY */}
         <div className="ct-body">
 
+          {/* LEFT – brand + CTA only */}
           <div className="ct-left">
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 28 }}>
-              <div style={{ height: 1, width: 28, background: "rgba(255,255,255,0.15)" }} />
-              <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 10, fontWeight: 500, letterSpacing: "0.2em", textTransform: "uppercase" }}>
-                Valore Assicurativo
-              </span>
+            <div className="ct-brand-tag">
+              <div className="ct-brand-tag-line" />
+              <span className="ct-brand-tag-label">Valore Assicurativo</span>
             </div>
             <p className="ct-left-quote">
               {language === "el"
                 ? <>Είμαστε πάντα διαθέσιμοι να σας βοηθήσουμε να βρείτε <span>την κατάλληλη λύση.</span></>
                 : <>Always available to help you find <span>the right solution.</span></>}
             </p>
-            <div className="ct-left-links">
-              {[
-                { icon: Phone,  text: "+30 210 417 7760", href: "tel:2104177760" },
-                { icon: Mail,   text: "info@valore.com",  href: "mailto:info@valore.com" },
-                { icon: MapPin, text: language === "el" ? "Πειραιάς, Ελλάδα" : "Piraeus, Greece", href: "https://www.google.com/maps/search/?api=1&query=Piraeus+Greece" },
-              ].map(({ icon: Icon, text, href }, i) => (
-                <a key={i} href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" className="ct-left-link">
-                  <div className="ct-left-link-icon"><Icon size={15} color="#52a447" /></div>
-                  <span className="ct-left-link-text">{text}</span>
-                </a>
-              ))}
-            </div>
             <a className="ct-cta" href="mailto:info@valore.com">
               {cta} <ArrowUpRight size={14} />
             </a>
           </div>
 
+          {/* RIGHT – all contact info, single source of truth */}
           <div className="ct-right">
-
-<div className="ct-info-rows">
-
-            <div className="ct-info-row">
-              <div className="ct-info-icon-col">
-                <div className="ct-info-icon"><MapPin size={16} /></div>
-                <span className="ct-info-label">{safeContact.headquarters}</span>
-              </div>
-              <div className="ct-info-values">
-                {safeContact.address.map((line: string, i: number) => (
-                  <span key={i} className="ct-info-val">{line}</span>
-                ))}
-              </div>
+            <div className="ct-info-rows">
+              {infoItems.map(({ icon: Icon, label, values }, i) => (
+                <div key={i} className="ct-info-row">
+                  <div className="ct-info-icon-col">
+                    <div className="ct-info-icon"><Icon size={16} /></div>
+                    <span className="ct-info-label">{label}</span>
+                  </div>
+                  <div className="ct-info-values">
+                    {values.map(({ text, href }: { text: string; href?: string }, j: number) =>
+                      href ? (
+                        <a key={j} href={href} className="ct-info-val">{text}</a>
+                      ) : (
+                        <span key={j} className="ct-info-val">{text}</span>
+                      )
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
-
-            <div className="ct-info-row">
-              <div className="ct-info-icon-col">
-                <div className="ct-info-icon"><Phone size={16} /></div>
-                <span className="ct-info-label">{safeContact.phone}</span>
-              </div>
-              <div className="ct-info-values">
-                {safeContact.phones.map((p: string, i: number) => (
-                  <a key={i} href={i === 0 ? "tel:2104177760" : "viber://chat?number=%2B306986504754"} className="ct-info-val">{p}</a>
-                ))}
-              </div>
-            </div>
-
-            <div className="ct-info-row">
-              <div className="ct-info-icon-col">
-                <div className="ct-info-icon"><Mail size={16} /></div>
-                <span className="ct-info-label">{safeContact.email}</span>
-              </div>
-              <div className="ct-info-values">
-                {safeContact.emails.map((e: string, i: number) => (
-                  <a key={i} href={`mailto:${e}`} className="ct-info-val">{e}</a>
-                ))}
-              </div>
-            </div>
-
-            <div className="ct-info-row">
-              <div className="ct-info-icon-col">
-                <div className="ct-info-icon"><Clock size={16} /></div>
-                <span className="ct-info-label">{safeContact.hours}</span>
-              </div>
-              <div className="ct-info-values">
-                {safeContact.schedule.map((s: string, i: number) => (
-                  <span key={i} className="ct-info-val">{s}</span>
-                ))}
-              </div>
-            </div>
-
-            </div>
-
           </div>
+
         </div>
       </div>
     </>
