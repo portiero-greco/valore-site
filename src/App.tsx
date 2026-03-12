@@ -14,6 +14,7 @@ import { VehicleInsurancePage } from "./pages/VehicleInsurancePage";
 import { HealthFormPage } from "./pages/HealthFormPage";
 import { PropertyFormPage } from "./pages/PropertyFormPage";
 import { ScrollToTop } from "./components/ScrollToTop";
+import { LanguageToggle } from "./components/LanguageToggle";
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
       <Router>
         <ScrollToTop />
         <Navbar />
+        <LanguageToggle />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/personal-insurance" element={<PersonalInsurancePage />} />

@@ -14,48 +14,50 @@ export function HomePage() {
   return (
     <div
       style={{
-        overflowY: "auto",
+        height: "100vh",
+        overflowY: "scroll",
         overflowX: "hidden",
+        scrollSnapType: "y mandatory",
       }}
       id="scroll-container"
     >
       {/* 1 — Hero */}
-      <div id="hero">
+      <div id="hero" style={{ scrollSnapAlign: "start" }}>
         <Hero />
       </div>
 
       {/* 3 — Individual Solutions */}
-      <div id="individual-solutions">
+      <div id="individual-solutions" style={{ scrollSnapAlign: "start" }}>
         <IndividualSolutions />
       </div>
 
       {/* 4 — Business Solutions */}
-      <div id="business-solutions">
+      <div id="business-solutions" style={{ scrollSnapAlign: "start" }}>
         <BusinessSolutionsPage />
       </div>
 
       {/* 5 — History */}
-      <div id="history">
+      <div id="history" style={{ scrollSnapAlign: "start" }}>
         <History />
       </div>
 
       {/* 6 — Unique Coverages */}
-      <div id="unique-coverages">
+      <div id="unique-coverages" style={{ scrollSnapAlign: "start" }}>
         <UniqueCoverages />
       </div>
 
       {/* 7 — Clients */}
-      <div id="clients">
+      <div id="clients" style={{ scrollSnapAlign: "start" }}>
         <Clients />
       </div>
 
       {/* 8 — Connections */}
-      <div id="connections">
+      <div id="connections" style={{ scrollSnapAlign: "start" }}>
         <Connections />
       </div>
 
       {/* 10 — Contact */}
-      <div id="contact">
+      <div id="contact" style={{ scrollSnapAlign: "start" }}>
         <Contact />
       </div>
     </div>
