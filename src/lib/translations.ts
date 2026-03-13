@@ -17,7 +17,9 @@ export const translations = {
       solutionsForBusinesses: "Solutions for Businesses",
       faqBusinesses: "FAQ for Businesses",
       backToSolutions: "Back to Solutions",
-      home: "Home"
+      home: "Home",
+      coverage: "Coverage",
+      whatsIncluded: "What's included"
     },
     hero: {
       title: "Valore Assicurativo",
@@ -847,7 +849,9 @@ We provide comprehensive coverage tailored to your needs and budget, ensuring pr
       solutionsForBusinesses: "Λύσεις για επιχειρήσεις",
       faqBusinesses: "Συχνές ερωτήσεις για επιχειρήσεις",
       backToSolutions: "Πίσω στις Λύσεις",
-      home: "Αρχική"
+      home: "Αρχική",
+      coverage: "Κάλυψη",
+      whatsIncluded: "Τι περιλαμβάνει"
     },
     hero: {
       title: "Valore Assicurativo",

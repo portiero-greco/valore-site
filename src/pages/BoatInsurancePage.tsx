@@ -61,7 +61,7 @@ export function BoatInsurancePage() {
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
             <div style={{ height: 1, width: 28, background: "#52a447" }} />
             <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.2em", textTransform: "uppercase", color: "#52a447" }}>
-              Insurance
+              {t.nav.insurance}
             </span>
           </div>
           <h1 style={{
