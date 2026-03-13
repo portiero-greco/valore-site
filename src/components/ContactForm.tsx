@@ -7,7 +7,7 @@ import { Send } from "lucide-react";
 import { useLanguage } from "../lib/LanguageContext";
 
 export function ContactForm() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -22,7 +22,7 @@ export function ContactForm() {
     e.preventDefault();
     setAttemptedSubmit(true);
     if (!canSubmit()) return;
-    alert(`Ευχαριστούμε ${fullName}! Το μήνυμά σας στάλθηκε επιτυχώς.`);
+    alert(t.contact.form.success);
     setFullName(""); setEmail(""); setPhone(""); setSubject(""); setMessage("");
     setConsentGiven(false); setAttemptedSubmit(false);
   };
@@ -37,13 +37,15 @@ export function ContactForm() {
         <div style={{ textAlign: "center", marginBottom: 52 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14, marginBottom: 20 }}>
             <div style={{ height: 1, width: 40, backgroundColor: "#52a447" }} />
-            <span style={{ color: "#52a447", fontSize: 11, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase" }}>Message</span>
+            <span style={{ color: "#52a447", fontSize: 11, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase" }}>{t.contact.form.eyebrow}</span>
             <div style={{ height: 1, width: 40, backgroundColor: "#52a447" }} />
           </div>
           <h2 style={{ fontSize: "clamp(24px, 3.5vw, 36px)", fontWeight: 300, color: "#111827", letterSpacing: "-0.02em", marginBottom: 10 }}>
-            Επικοινωνήστε <span style={{ color: "#52a447", fontWeight: 600 }}>μαζί μας</span>
+            {language === "el"
+              ? <>Επικοινωνήστε <span style={{ color: "#52a447", fontWeight: 600 }}>μαζί μας</span></>
+              : <>Get in <span style={{ color: "#52a447", fontWeight: 600 }}>touch</span></>}
           </h2>
-          <p style={{ color: "#9ca3af", fontSize: 15 }}>Συμπληρώστε τη φόρμα και θα επικοινωνήσουμε μαζί σας.</p>
+          <p style={{ color: "#9ca3af", fontSize: 15 }}>{t.contact.form.subtitle}</p>
         </div>
 
         {/* Card */}
@@ -51,35 +53,35 @@ export function ContactForm() {
           <form onSubmit={handleSubmit}>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
               <div>
-                <Label htmlFor="fullName" style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#9ca3af" }}>Ονοματεπώνυμο *</Label>
+                <Label htmlFor="fullName" style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#9ca3af" }}>{t.contact.form.name} *</Label>
                 <Input id="fullName" value={fullName} onChange={e => setFullName(e.target.value)} style={{ marginTop: 6, border: fieldErr(fullName), borderRadius: 6 }} />
               </div>
               <div>
-                <Label htmlFor="email" style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#9ca3af" }}>Email *</Label>
+                <Label htmlFor="email" style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#9ca3af" }}>{t.contact.form.email} *</Label>
                 <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} style={{ marginTop: 6, border: fieldErr(email), borderRadius: 6 }} />
               </div>
             </div>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
               <div>
-                <Label htmlFor="phone" style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#9ca3af" }}>Τηλέφωνο *</Label>
+                <Label htmlFor="phone" style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#9ca3af" }}>{t.contact.form.phone} *</Label>
                 <Input id="phone" value={phone} onChange={e => setPhone(e.target.value)} style={{ marginTop: 6, border: fieldErr(phone), borderRadius: 6 }} />
               </div>
               <div>
-                <Label htmlFor="subject" style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#9ca3af" }}>Θέμα *</Label>
+                <Label htmlFor="subject" style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#9ca3af" }}>{t.contact.form.subject} *</Label>
                 <Input id="subject" value={subject} onChange={e => setSubject(e.target.value)} style={{ marginTop: 6, border: fieldErr(subject), borderRadius: 6 }} />
               </div>
             </div>
 
             <div style={{ marginBottom: 20 }}>
-              <Label htmlFor="message" style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#9ca3af" }}>Μήνυμα *</Label>
+              <Label htmlFor="message" style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#9ca3af" }}>{t.contact.form.message} *</Label>
               <Textarea id="message" rows={5} value={message} onChange={e => setMessage(e.target.value)} style={{ marginTop: 6, border: fieldErr(message), borderRadius: 6, resize: "none" }} />
             </div>
 
             <div style={{ backgroundColor: attemptedSubmit && !consentGiven ? "rgba(254,226,226,0.5)" : "#f9fafb", border: `1px solid ${attemptedSubmit && !consentGiven ? "#fca5a5" : "#f0f0f0"}`, borderRadius: 8, padding: "14px 16px", display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 24 }}>
               <Checkbox id="consent" checked={consentGiven} onCheckedChange={c => setConsentGiven(c === true)} style={{ marginTop: 2 }} />
               <Label htmlFor="consent" style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.6, cursor: "pointer", fontWeight: 400 }}>
-                Δίνω τη συγκατάθεσή μου για την επεξεργασία των προσωπικών μου δεδομένων.
+                {t.contact.form.consent}
               </Label>
             </div>
 
@@ -97,7 +99,7 @@ export function ContactForm() {
               onMouseLeave={e => { (e.currentTarget.style.backgroundColor = "#52a447"); }}
             >
               <Send size={15} />
-              Αποστολή Μηνύματος
+              {t.contact.form.submit}
             </button>
           </form>
         </div>

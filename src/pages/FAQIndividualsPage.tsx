@@ -36,7 +36,7 @@ export function FAQIndividualsPage() {
               className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white/90 px-4 py-2 text-sm font-semibold text-gray-600 shadow-[0_8px_20px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#52a447]/40 hover:text-[#52a447] hover:shadow-[0_12px_28px_rgba(82,164,71,0.14)]"
             >
               <ArrowLeft size={16} />
-              Home
+              {t.nav.home}
             </Link>
           </div>
 

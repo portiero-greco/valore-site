@@ -302,7 +302,7 @@ export function Clients() {
         <div className="cl-left">
           <div className="cl-eyebrow">
             <div className="cl-eyebrow-line" />
-            <span className="cl-eyebrow-label">Clients</span>
+            <span className="cl-eyebrow-label">{el ? "Πελάτες" : "Clients"}</span>
           </div>
 
           <h2 className="cl-headline">
@@ -344,7 +344,7 @@ export function Clients() {
                 <span className="cl-tile-name">{c.name}</span>
                 {c.url !== "#" && (
                   <a href={c.url} target="_blank" rel="noopener noreferrer" className="cl-tile-link">
-                    Visit <ArrowUpRight size={10} />
+                    {el ? "Επίσκεψη" : "Visit"} <ArrowUpRight size={10} />
                   </a>
                 )}
               </div>

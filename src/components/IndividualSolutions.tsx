@@ -5,7 +5,7 @@ import { ArrowUpRight } from "lucide-react";
 import { useState } from "react";
 
 export function IndividualSolutions() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [hovered, setHovered] = useState<number | null>(null);
 
   const safeText = {
@@ -233,7 +233,7 @@ export function IndividualSolutions() {
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
               <div style={{ height: 1, width: 28, backgroundColor: "#52a447" }} />
-              <span style={{ color: "#52a447", fontSize: 10, fontWeight: 800, letterSpacing: "0.2em", textTransform: "uppercase" }}>Individual</span>
+              <span style={{ color: "#52a447", fontSize: 10, fontWeight: 800, letterSpacing: "0.2em", textTransform: "uppercase" }}>{language === "el" ? "Ιδιώτες" : "Individual"}</span>
             </div>
             <h2 style={{ fontSize: "clamp(16px, 1.6vw, 22px)", fontWeight: 700, color: "#111827", letterSpacing: "-0.02em", margin: 0 }}>
               {safeText.title}
@@ -260,7 +260,7 @@ export function IndividualSolutions() {
                 <h3 className="isol-title">{s.title}</h3>
                 <p className="isol-desc">{s.description}</p>
                 <span className="isol-cta">
-                  Learn more <ArrowUpRight size={14} />
+                  {language === "el" ? "Περισσότερα" : "Learn more"} <ArrowUpRight size={14} />
                 </span>
               </div>
               <div className="isol-accent" />

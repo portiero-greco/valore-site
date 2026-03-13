@@ -157,9 +157,12 @@ export const translations = {
       },
       form: {
         title: "Send a Message",
+        eyebrow: "Message",
+        subtitle: "Fill in the form and we will get back to you.",
         name: "Full Name",
         email: "Email",
         phone: "Phone",
+        subject: "Subject",
         message: "Message",
         placeholder: {
           name: "John Doe",
@@ -167,6 +170,7 @@ export const translations = {
           phone: "+30 123 456 7890",
           message: "How can we help you?"
         },
+        consent: "I consent to the processing of my personal data.",
         submit: "Send Message",
         success: "Thank you for contacting us! We will respond as soon as possible."
       },
@@ -983,9 +987,12 @@ We provide comprehensive coverage tailored to your needs and budget, ensuring pr
       },
       form: {
         title: "Στείλτε Μήνυμα",
-        name: "Πλήρες Όνομα",
+        eyebrow: "Μήνυμα",
+        subtitle: "Συμπληρώστε τη φόρμα και θα επικοινωνήσουμε μαζί σας.",
+        name: "Ονοματεπώνυμο",
         email: "Email",
         phone: "Τηλέφωνο",
+        subject: "Θέμα",
         message: "Μήνυμα",
         placeholder: {
           name: "Γιάννης Παπαδόπουλος",
@@ -993,6 +1000,7 @@ We provide comprehensive coverage tailored to your needs and budget, ensuring pr
           phone: "+30 123 456 7890",
           message: "Πώς μπορούμε να σας βοηθήσουμε;"
         },
+        consent: "Δίνω τη συγκατάθεσή μου για την επεξεργασία των προσωπικών μου δεδομένων.",
         submit: "Αποστολή Μηνύματος",
         success: "Ευχαριστούμε που επικοινωνήσατε μαζί μας! Θα απαντήσουμε το συντομότερο δυνατό."
       },

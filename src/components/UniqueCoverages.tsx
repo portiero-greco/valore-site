@@ -455,7 +455,7 @@ export function UniqueCoverages() {
           <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
             <div className="uc-eyebrow">
               <div className="uc-eyebrow-line" />
-              <span className="uc-eyebrow-label">Coverages</span>
+              <span className="uc-eyebrow-label">{language === "el" ? "Καλύψεις" : "Coverages"}</span>
             </div>
             <h2 className="uc-topbar-title">
               {language === "el" ? "Μοναδικές Καλύψεις" : "Unique Coverages"}
@@ -508,7 +508,7 @@ export function UniqueCoverages() {
                 <>
                   <div className="uc-detail-eyebrow uc-animate uc-animate-delay-1">
                     <div className="uc-detail-eyebrow-line" />
-                    <span className="uc-detail-eyebrow-label">Overview</span>
+                    <span className="uc-detail-eyebrow-label">{language === "el" ? "Επισκόπηση" : "Overview"}</span>
                   </div>
                   <p className="uc-detail-desc uc-animate uc-animate-delay-2">{activeItem.description}</p>
                 </>

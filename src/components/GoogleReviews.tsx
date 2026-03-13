@@ -141,7 +141,7 @@ export function GoogleReviews() {
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
               <div style={{ height: 1, width: 28, backgroundColor: "#52a447" }} />
-              <span style={{ color: "#52a447", fontSize: 10, fontWeight: 800, letterSpacing: "0.2em", textTransform: "uppercase" }}>Reviews</span>
+              <span style={{ color: "#52a447", fontSize: 10, fontWeight: 800, letterSpacing: "0.2em", textTransform: "uppercase" }}>{language === "el" ? "Κριτικές" : "Reviews"}</span>
             </div>
             <h2 style={{ fontSize: "clamp(18px, 2vw, 26px)", fontWeight: 700, color: "#111827", letterSpacing: "-0.02em", margin: 0 }}>
               {safeText.subtitle}
